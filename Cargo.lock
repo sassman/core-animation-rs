@@ -44,7 +44,8 @@ dependencies = [
 [[package]]
 name = "duration-ext"
 version = "1.0.0"
-source = "git+https://github.com/sassman/duration-ext-rs#fbe323b1b1ccee3b365f3adec24c71f7ff7c96ba"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "69e5244c1862610bdfe95a81240cd107ebc3a3e9191b8b75523897cc11d8ea88"
 
 [[package]]
 name = "libc"

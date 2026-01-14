@@ -12,7 +12,7 @@ categories = ["os::macos-apis", "gui"]
 [workspace]
 
 [dependencies]
-duration-ext = { git = "https://github.com/sassman/duration-ext-rs" }
+duration-ext = { version = "1.0" }
 
 [target.'cfg(target_os = "macos")'.dependencies]
 objc2 = "0.6.3"
