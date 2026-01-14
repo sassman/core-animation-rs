@@ -1,35 +1,93 @@
-//! Rust bindings for macOS Core Animation with builder APIs.
+//! Rust bindings for macOS Core Animation with ergonomic builder APIs.
 //!
-//! Core Animation is Apple's GPU-accelerated rendering system. This crate
-//! wraps it with ergonomic builders, focusing on **particle effects** and
-//! **layer composition**.
+//! # Builders
+//!
+//! | Builder | Purpose |
+//! |---------|---------|
+//! | [`WindowBuilder`] | Layer-backed windows with background, border, transparency |
+//! | [`CALayerBuilder`] | Base layers with bounds, position, sublayers |
+//! | [`CAShapeLayerBuilder`] | Vector shapes with path, fill, stroke, shadows |
+//! | [`CATextLayerBuilder`] | Text rendering layers |
+//! | [`CAEmitterLayerBuilder`](particles::CAEmitterLayerBuilder) | Particle systems with closure-based cell configuration |
+//! | [`PointBurstBuilder`](particles::PointBurstBuilder) | Convenience API for radial particle bursts |
+//! | [`CABasicAnimationBuilder`](animation_builder::CABasicAnimationBuilder) | Standalone GPU-accelerated animations |
 //!
 //! # Quick Start
 //!
-//! Particles burst outward from a point:
+//! ```ignore
+//! use core_animation::prelude::*;
+//!
+//! let window = WindowBuilder::new()
+//!     .title("Demo")
+//!     .size(400.0, 400.0)
+//!     .centered()
+//!     .background_color(Color::rgb(0.1, 0.1, 0.15))
+//!     .build();
+//!
+//! let circle = CAShapeLayerBuilder::new()
+//!     .circle(80.0)
+//!     .position(CGPoint::new(200.0, 200.0))
+//!     .fill_color(Color::CYAN)
+//!     .animate("pulse", KeyPath::TransformScale, |a| {
+//!         a.values(0.85, 1.15)
+//!             .duration(1.seconds())
+//!             .easing(Easing::InOut)
+//!             .autoreverses()
+//!             .repeat(Repeat::Forever)
+//!     })
+//!     .build();
+//!
+//! window.container().add_sublayer(&circle);
+//! window.show_for(10.seconds());
+//! ```
+//!
+//! # Animations
+//!
+//! All layer builders support `.animate()` for GPU-accelerated animations:
+//!
+//! ```ignore
+//! .animate("name", KeyPath::TransformScale, |a| {
+//!     a.values(0.8, 1.2)              // from/to values
+//!         .duration(500.millis())      // timing
+//!         .easing(Easing::InOut)       // curve
+//!         .autoreverses()              // ping-pong
+//!         .repeat(Repeat::Forever)     // loop
+//!         .phase_offset(0.5)           // stagger multiple animations
+//! })
+//! ```
+//!
+//! **Animatable properties:** [`TransformScale`](animation_builder::KeyPath::TransformScale),
+//! [`TransformRotation`](animation_builder::KeyPath::TransformRotation),
+//! [`Opacity`](animation_builder::KeyPath::Opacity),
+//! [`ShadowRadius`](animation_builder::KeyPath::ShadowRadius),
+//! [`ShadowOpacity`](animation_builder::KeyPath::ShadowOpacity),
+//! [`Custom`](animation_builder::KeyPath::Custom)
+//!
+//! **Easing curves:** [`Linear`](animation_builder::Easing::Linear),
+//! [`In`](animation_builder::Easing::In),
+//! [`Out`](animation_builder::Easing::Out),
+//! [`InOut`](animation_builder::Easing::InOut)
+//!
+//! # Particle Systems
 //!
 //! ```ignore
 //! use std::f64::consts::PI;
-//! use core_animation::prelude::*;
 //!
 //! let emitter = CAEmitterLayerBuilder::new()
 //!     .position(320.0, 240.0)
 //!     .shape(EmitterShape::Point)
 //!     .particle(|p| {
-//!         p.birth_rate(100.0)           // spawn rate
-//!             .lifetime(5.0)            // seconds until particle disappears
-//!             .velocity(80.0)           // movement speed
-//!             .emission_range(PI * 2.0) // spread angle (full circle)
+//!         p.birth_rate(100.0)
+//!             .lifetime(5.0)
+//!             .velocity(80.0)
+//!             .emission_range(PI * 2.0)
 //!             .color(Color::CYAN)
 //!             .image(ParticleImage::soft_glow(64))
 //!     })
 //!     .build();
-//!
-//! window.container().add_sublayer(&emitter);
-//! window.show_for(10.seconds());
 //! ```
 //!
-//! Simpler API for the same effect:
+//! Or use the convenience builder:
 //!
 //! ```ignore
 //! let burst = PointBurstBuilder::new(320.0, 240.0)
@@ -38,37 +96,19 @@
 //!     .build();
 //! ```
 //!
+//! **Particle images:** [`soft_glow`](particles::ParticleImage::soft_glow),
+//! [`circle`](particles::ParticleImage::circle),
+//! [`star`](particles::ParticleImage::star),
+//! [`spark`](particles::ParticleImage::spark)
+//!
 //! # Examples
 //!
-//! See [`examples/README.md`](https://github.com/sassman/t-rec-rs/tree/main/crates/core-animation/examples)
+//! See the [examples](https://github.com/sassman/core-animation-rs/tree/main/examples)
 //! for runnable demos with screenshots.
 //!
 //! ```bash
-//! cargo run --example emitter
+//! cargo run --example window_builder
 //! ```
-//!
-//! # Modules
-//!
-//! - [`animation_builder`] - GPU-accelerated animations ([`CABasicAnimationBuilder`](animation_builder::CABasicAnimationBuilder),
-//!   [`KeyPath`](animation_builder::KeyPath), [`Easing`](animation_builder::Easing))
-//! - [`particles`] - Particle emitter builders ([`CAEmitterLayerBuilder`](particles::CAEmitterLayerBuilder),
-//!   [`PointBurstBuilder`](particles::PointBurstBuilder), [`ParticleImage`](particles::ParticleImage))
-//! - [`window`] - Test window for examples ([`WindowBuilder`])
-//!
-//! # Types
-//!
-//! **This crate:**
-//! - [`Color`] - RGBA color with presets (`Color::CYAN`, `Color::rgb(...)`)
-//! - [`CALayerBuilder`] - Generic layer builder
-//! - [`CAShapeLayerBuilder`] - Vector shape builder
-//! - [`CATextLayerBuilder`] - Text rendering builder with fonts and alignment
-//! - [`DurationExt`] - `5.seconds()`, `500.millis()` syntax
-//!
-//! **Re-exported from Apple frameworks:**
-//! - [`CALayer`], [`CAShapeLayer`], [`CATransform3D`] - Core Animation
-//! - [`CGPoint`](objc2_core_foundation::CGPoint), [`CGSize`](objc2_core_foundation::CGSize),
-//!   [`CGRect`](objc2_core_foundation::CGRect) - Geometry
-//! - [`CGPath`](objc2_core_graphics::CGPath), [`CGColor`](objc2_core_graphics::CGColor) - Graphics
 //!
 //! Use [`prelude`] to import common types.
 

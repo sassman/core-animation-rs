@@ -1,5 +1,9 @@
 # core-animation
 
+[![Crates.io](https://img.shields.io/crates/v/core-animation.svg)](https://crates.io/crates/core-animation)
+[![Documentation](https://docs.rs/core-animation/badge.svg)](https://docs.rs/core-animation)
+[![License](https://img.shields.io/crates/l/core-animation.svg)](LICENSE-MIT)
+
 Rust bindings for macOS Core Animation with ergonomic builder APIs.
 
 ## Builders
