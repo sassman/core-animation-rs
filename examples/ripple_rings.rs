@@ -19,10 +19,6 @@
 use core_animation::prelude::*;
 
 #[cfg(target_os = "macos")]
-#[path = "common/mod.rs"]
-mod common;
-
-#[cfg(target_os = "macos")]
 fn main() {
     println!("Ripple Rings - Water Ripple Effect\n");
 
@@ -193,15 +189,6 @@ fn main() {
     println!("  - Staggered phase creates continuous emanation");
     println!("  - Easing::Out gives realistic ripple physics\n");
 
-    // Show with optional recording
-    #[cfg(feature = "record")]
-    common::show_with_recording(
-        &window,
-        "crates/core-animation/examples/screenshots/ripple_rings",
-        15.seconds(),
-    );
-
-    #[cfg(not(feature = "record"))]
     window.show_for(15.seconds());
 
     println!("Done!");

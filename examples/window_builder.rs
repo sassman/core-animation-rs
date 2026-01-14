@@ -10,10 +10,6 @@
 use core_animation::prelude::*;
 
 #[cfg(target_os = "macos")]
-#[path = "common/mod.rs"]
-mod common;
-
-#[cfg(target_os = "macos")]
 fn main() {
     println!("WindowBuilder Example - Fluent API\n");
 
@@ -56,14 +52,6 @@ fn main() {
     println!("Window size: {:?}", window.size());
     println!("Showing pulsing circle for 10 seconds...\n");
 
-    #[cfg(feature = "record")]
-    common::show_with_recording(
-        &window,
-        "crates/core-animation/examples/screenshots/window_builder",
-        10.seconds(),
-    );
-
-    #[cfg(not(feature = "record"))]
     window.show_for(10.seconds());
 
     println!("Done!");

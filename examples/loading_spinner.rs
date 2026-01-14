@@ -13,10 +13,6 @@ use core_animation::prelude::*;
 use std::f64::consts::PI;
 
 #[cfg(target_os = "macos")]
-#[path = "common/mod.rs"]
-mod common;
-
-#[cfg(target_os = "macos")]
 fn main() {
     println!("Loading Spinner - Smooth Rotation\n");
 
@@ -203,15 +199,6 @@ fn main() {
     println!("Watch the loading spinner for 10 seconds...");
     println!("Notice the constant speed from Easing::Linear.\n");
 
-    // Show with optional recording
-    #[cfg(feature = "record")]
-    common::show_with_recording(
-        &window,
-        "crates/core-animation/examples/screenshots/loading_spinner",
-        10.seconds(),
-    );
-
-    #[cfg(not(feature = "record"))]
     window.show_for(10.seconds());
 
     println!("Done!");

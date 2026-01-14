@@ -11,10 +11,6 @@
 use core_animation::prelude::*;
 
 #[cfg(target_os = "macos")]
-#[path = "common/mod.rs"]
-mod common;
-
-#[cfg(target_os = "macos")]
 fn main() {
     println!("Staggered Dots - Loading Indicator\n");
 
@@ -145,15 +141,6 @@ fn main() {
     println!("Watch the staggered dots for 10 seconds...");
     println!("Notice how phase_offset creates the wave effect.\n");
 
-    // Show with optional recording
-    #[cfg(feature = "record")]
-    common::show_with_recording(
-        &window,
-        "crates/core-animation/examples/screenshots/staggered_dots",
-        10.seconds(),
-    );
-
-    #[cfg(not(feature = "record"))]
     window.show_for(10.seconds());
 
     println!("Done!");

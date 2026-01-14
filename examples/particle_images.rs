@@ -12,10 +12,6 @@ use std::f64::consts::PI;
 use core_animation::prelude::*;
 
 #[cfg(target_os = "macos")]
-#[path = "common/mod.rs"]
-mod common;
-
-#[cfg(target_os = "macos")]
 fn main() {
     println!("Particle Images Showcase\n");
     println!("Four emitters demonstrating different particle image types.\n");
@@ -133,14 +129,6 @@ fn main() {
     }
     println!();
 
-    #[cfg(feature = "record")]
-    common::show_with_recording(
-        &window,
-        "crates/core-animation/examples/screenshots/particle_images",
-        15.seconds(),
-    );
-
-    #[cfg(not(feature = "record"))]
     window.show_for(15.seconds());
 
     println!("Done!");

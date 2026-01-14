@@ -9,10 +9,6 @@
 use core_animation::prelude::*;
 
 #[cfg(target_os = "macos")]
-#[path = "common/mod.rs"]
-mod common;
-
-#[cfg(target_os = "macos")]
 fn main() {
     println!("PointBurstBuilder Example\n");
     println!("Simplified API for particles bursting from a point.\n");
@@ -74,14 +70,6 @@ fn main() {
     println!("PointBurstBuilder simplifies the common pattern of");
     println!("particles exploding outward from a single point.\n");
 
-    #[cfg(feature = "record")]
-    common::show_with_recording(
-        &window,
-        "crates/core-animation/examples/screenshots/point_burst",
-        12.seconds(),
-    );
-
-    #[cfg(not(feature = "record"))]
     window.show_for(12.seconds());
 
     println!("Done!");

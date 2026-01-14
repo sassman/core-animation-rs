@@ -11,10 +11,6 @@
 use core_animation::prelude::*;
 
 #[cfg(target_os = "macos")]
-#[path = "common/mod.rs"]
-mod common;
-
-#[cfg(target_os = "macos")]
 fn main() {
     println!("Neon Glow - Retro Neon Sign Effect\n");
 
@@ -174,15 +170,6 @@ fn main() {
     println!("Watch the neon glow effect for 10 seconds...");
     println!("Notice the pulsing shadow radius creating the glow.\n");
 
-    // Show with optional recording
-    #[cfg(feature = "record")]
-    common::show_with_recording(
-        &window,
-        "crates/core-animation/examples/screenshots/neon_glow",
-        10.seconds(),
-    );
-
-    #[cfg(not(feature = "record"))]
     window.show_for(10.seconds());
 
     println!("Done!");

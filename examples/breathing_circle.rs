@@ -11,10 +11,6 @@
 use core_animation::prelude::*;
 
 #[cfg(target_os = "macos")]
-#[path = "common/mod.rs"]
-mod common;
-
-#[cfg(target_os = "macos")]
 fn main() {
     println!("Breathing Circle - Soft Pulsing Orb\n");
 
@@ -121,15 +117,6 @@ fn main() {
     println!("Watch the breathing orb for 10 seconds...");
     println!("Notice how opacity peaks when the circle is smallest.\n");
 
-    // Show with optional recording
-    #[cfg(feature = "record")]
-    common::show_with_recording(
-        &window,
-        "crates/core-animation/examples/screenshots/breathing_circle",
-        10.seconds(),
-    );
-
-    #[cfg(not(feature = "record"))]
     window.show_for(10.seconds());
 
     println!("Done!");

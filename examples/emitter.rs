@@ -42,10 +42,6 @@ use std::f64::consts::PI;
 use core_animation::prelude::*;
 
 #[cfg(target_os = "macos")]
-#[path = "common/mod.rs"]
-mod common;
-
-#[cfg(target_os = "macos")]
 fn main() {
     println!("Particle Emitter Example\n");
     println!("Particles burst from a single point in all directions.\n");
@@ -81,14 +77,6 @@ fn main() {
     println!("  - lifetime: 10 seconds");
     println!("  - At steady state: ~1000 particles on screen\n");
 
-    #[cfg(feature = "record")]
-    common::show_with_recording(
-        &window,
-        "crates/core-animation/examples/screenshots/emitter",
-        15.seconds(),
-    );
-
-    #[cfg(not(feature = "record"))]
     window.show_for(15.seconds());
 
     println!("Done!");
