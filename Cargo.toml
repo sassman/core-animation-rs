@@ -1,0 +1,68 @@
+[package]
+name = "core-animation"
+version = "0.3.0"
+description = "Ergonomic Rust bindings for macOS Core Animation with builder patterns"
+authors = ["Sven Kanoldt <sven@d34dl0ck.me>"]
+edition = "2021"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/sassman/core-animation-rs"
+keywords = ["macos", "core-animation", "quartz", "animation", "objc2"]
+categories = ["os::macos-apis", "gui"]
+
+[workspace]
+
+[dependencies]
+duration-ext = { git = "https://github.com/sassman/duration-ext-rs" }
+
+[target.'cfg(target_os = "macos")'.dependencies]
+objc2 = "0.6.3"
+objc2-quartz-core = { version = "0.3.2", features = [
+    "CALayer",
+    "CAShapeLayer",
+    "CATextLayer",
+    "CATransform3D",
+    "CAMediaTiming",
+    "CAMediaTimingFunction",
+    "CATransaction",
+    "CAAnimation",
+    "CAEmitterLayer",
+    "CAEmitterCell",
+    "objc2-core-foundation",
+    "objc2-core-graphics",
+] }
+objc2-core-foundation = { version = "0.3", features = [
+    "CFRunLoop",
+    "CFDate",
+    "CFDictionary",
+    "CFString",
+    "CFAttributedString",
+] }
+objc2-core-graphics = { version = "0.3", features = [
+    "CGColor",
+    "CGColorSpace",
+    "CGPath",
+    "CGBitmapContext",
+    "CGContext",
+    "CGImage",
+    "CGAffineTransform",
+    "CGDirectDisplay",
+    "CGWindow",
+] }
+objc2-core-text = { version = "0.3", features = [
+    "CTFont",
+    "CTLine",
+    "CTStringAttributes",
+    "objc2-core-graphics",
+] }
+objc2-foundation = "0.3.2"
+objc2-app-kit = { version = "0.3.2", features = [
+    "NSApplication",
+    "NSResponder",
+    "NSRunningApplication",
+    "NSWindow",
+    "NSGraphics",
+    "NSView",
+    "NSScreen",
+    "NSBitmapImageRep",
+    "NSImageRep",
+] }

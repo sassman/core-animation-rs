@@ -1,0 +1,44 @@
+name: Publish
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to publish (e.g., v0.3.0)"
+        required: true
+        type: string
+      dry-run:
+        description: "Dry run (no actual publish)"
+        required: true
+        type: boolean
+        default: true
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+
+  publish:
+    name: Publish to crates.io
+    needs: build
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag || github.ref }}
+
+      - name: Setup rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Publish (dry-run)
+        if: ${{ inputs.dry-run == true }}
+        run: cargo publish --dry-run
+
+      - name: Publish
+        if: ${{ inputs.dry-run != true }}
+        run: cargo publish
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
