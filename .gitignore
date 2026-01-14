@@ -1,1 +1,14 @@
-/target
+# Build artifacts
+/target/
+
+# Cargo lock file (library crate)
+Cargo.lock
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# macOS
+.DS_Store
