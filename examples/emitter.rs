@@ -32,8 +32,8 @@
 //! The Rust builder API provides a more ergonomic experience with method chaining
 //! and the closure pattern for particle configuration.
 //!
-//! Run with: cargo run -p core-animation --example emitter
-//! With recording: cargo run -p core-animation --example emitter --features record
+//! Run with: cargo run --example emitter
+//! With recording: cargo run --example emitter --features record
 
 #[cfg(target_os = "macos")]
 use std::f64::consts::PI;

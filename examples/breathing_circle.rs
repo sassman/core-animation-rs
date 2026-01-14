@@ -4,8 +4,8 @@
 //! The opacity peaks when scale is smallest, creating a "breathing in/out" effect
 //! where the circle brightens as it contracts and dims as it expands.
 //!
-//! Run with: cargo run -p core-animation --example breathing_circle
-//! With recording: cargo run -p core-animation --example breathing_circle --features record
+//! Run with: cargo run --example breathing_circle
+//! With recording: cargo run --example breathing_circle --features record
 
 #[cfg(target_os = "macos")]
 use core_animation::prelude::*;

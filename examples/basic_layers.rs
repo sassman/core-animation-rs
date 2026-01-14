@@ -3,8 +3,8 @@
 //! Demonstrates CALayer and CAShapeLayer with the builder APIs and
 //! GPU-accelerated animations using `.animate()`.
 //!
-//! Run with: cargo run -p core-animation --example basic_layers
-//! With recording: cargo run -p core-animation --example basic_layers --features record
+//! Run with: cargo run --example basic_layers
+//! With recording: cargo run --example basic_layers --features record
 
 #[cfg(target_os = "macos")]
 use core_animation::prelude::*;

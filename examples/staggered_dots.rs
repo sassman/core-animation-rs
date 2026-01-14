@@ -4,8 +4,8 @@
 //! elements. All dots share the same animation parameters but start at different
 //! points in the cycle, creating a smooth wave effect.
 //!
-//! Run with: cargo run -p core-animation --example staggered_dots
-//! With recording: cargo run -p core-animation --example staggered_dots --features record
+//! Run with: cargo run --example staggered_dots
+//! With recording: cargo run --example staggered_dots --features record
 
 #[cfg(target_os = "macos")]
 use core_animation::prelude::*;

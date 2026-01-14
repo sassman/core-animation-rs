@@ -44,7 +44,7 @@
 //! for runnable demos with screenshots.
 //!
 //! ```bash
-//! cargo run -p core-animation --example emitter
+//! cargo run --example emitter
 //! ```
 //!
 //! # Modules

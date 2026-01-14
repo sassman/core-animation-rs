@@ -3,8 +3,8 @@
 //! This example demonstrates the fully fluent API for creating windows with
 //! animated layers inline, from window to layers to animations.
 //!
-//! Run with: cargo run -p core-animation --example window_builder
-//! With recording: cargo run -p core-animation --example window_builder --features record
+//! Run with: cargo run --example window_builder
+//! With recording: cargo run --example window_builder --features record
 
 #[cfg(target_os = "macos")]
 use core_animation::prelude::*;

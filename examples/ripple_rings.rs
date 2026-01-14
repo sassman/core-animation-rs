@@ -12,8 +12,8 @@
 //! - Multiple animations per layer
 //! - `Easing::Out` for realistic ripple physics (fast start, slow end)
 //!
-//! Run with: cargo run -p core-animation --example ripple_rings
-//! With recording: cargo run -p core-animation --example ripple_rings --features record
+//! Run with: cargo run --example ripple_rings
+//! With recording: cargo run --example ripple_rings --features record
 
 #[cfg(target_os = "macos")]
 use core_animation::prelude::*;

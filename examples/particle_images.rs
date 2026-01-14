@@ -2,8 +2,8 @@
 //!
 //! Shows soft_glow, circle, star, and spark particle images side by side.
 //!
-//! Run with: cargo run -p core-animation --example particle_images
-//! With recording: cargo run -p core-animation --example particle_images --features record
+//! Run with: cargo run --example particle_images
+//! With recording: cargo run --example particle_images --features record
 
 #[cfg(target_os = "macos")]
 use std::f64::consts::PI;

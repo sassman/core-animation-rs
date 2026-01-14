@@ -4,7 +4,7 @@
 //! 1. Window is visible after calling show()
 //! 2. Window is NOT visible after show_for() returns (window is closed)
 //!
-//! Run with: cargo run -p core-animation --example test_window_visibility
+//! Run with: cargo run --example test_window_visibility
 
 #[cfg(target_os = "macos")]
 use core_animation::prelude::*;

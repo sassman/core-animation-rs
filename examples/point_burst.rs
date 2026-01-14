@@ -2,8 +2,8 @@
 //!
 //! Demonstrates the convenience builder for particles bursting from a point.
 //!
-//! Run with: cargo run -p core-animation --example point_burst
-//! With recording: cargo run -p core-animation --example point_burst --features record
+//! Run with: cargo run --example point_burst
+//! With recording: cargo run --example point_burst --features record
 
 #[cfg(target_os = "macos")]
 use core_animation::prelude::*;

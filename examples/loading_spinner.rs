@@ -4,8 +4,8 @@
 //! rotational speed. Uses multiple elements arranged in a circle to create
 //! a professional-looking spinner.
 //!
-//! Run with: cargo run -p core-animation --example loading_spinner
-//! With recording: cargo run -p core-animation --example loading_spinner --features record
+//! Run with: cargo run --example loading_spinner
+//! With recording: cargo run --example loading_spinner --features record
 
 #[cfg(target_os = "macos")]
 use core_animation::prelude::*;

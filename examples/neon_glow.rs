@@ -4,8 +4,8 @@
 //! to create a glowing neon effect. Uses bright neon colors (pink, cyan) on
 //! a dark background for maximum contrast.
 //!
-//! Run with: cargo run -p core-animation --example neon_glow
-//! With recording: cargo run -p core-animation --example neon_glow --features record
+//! Run with: cargo run --example neon_glow
+//! With recording: cargo run --example neon_glow --features record
 
 #[cfg(target_os = "macos")]
 use core_animation::prelude::*;
