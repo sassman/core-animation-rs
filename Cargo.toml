@@ -1,6 +1,6 @@
 [package]
 name = "core-animation"
-version = "0.3.2"
+version = "0.3.3"
 description = "Ergonomic Rust bindings for macOS Core Animation with builder patterns"
 authors = ["Sven Kanoldt <sven@d34dl0ck.me>"]
 edition = "2021"
