@@ -10,10 +10,23 @@ keywords = ["macos", "core-animation", "quartz", "animation", "objc2"]
 categories = ["os::macos-apis", "gui"]
 exclude = ["examples/screenshots/*", "tools/*"]
 
+# We include_str! all examples as doctests, so we don't need to test them twice.
+autoexamples = false
+
+[package.metadata.docs.rs]
+default-target = "aarch64-apple-darwin"
+targets = [
+    "aarch64-apple-darwin",
+    "x86_64-apple-darwin",
+    "aarch64-apple-ios",
+    "aarch64-apple-tvos",
+    "aarch64-apple-watchos",
+    "aarch64-apple-ios-macabi",
+    "aarch64-apple-visionos",
+]
+
 [dependencies]
 duration-ext = { version = "1.0" }
-
-[target.'cfg(target_os = "macos")'.dependencies]
 objc2 = "0.6.3"
 objc2-quartz-core = { version = "0.3.2", features = [
     "CALayer",

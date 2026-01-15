@@ -112,7 +112,8 @@
 //!
 //! Use [`prelude`] to import common types.
 
-#![cfg(target_os = "macos")]
+#[cfg(all(not(docsrs), not(any(target_vendor = "apple"))))]
+compile_error!("`core-animation` only works on Apple platforms. Pass `--target aarch64-apple-darwin` or similar to compile for macOS.");
 
 pub mod animation_builder;
 mod color;

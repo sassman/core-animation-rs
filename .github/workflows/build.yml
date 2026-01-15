@@ -51,6 +51,18 @@ jobs:
       - name: cargo test
         run: cargo test --all
 
+  docs:
+    name: docs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin
+      - name: Build documentation
+        run: cargo doc --no-deps --target aarch64-apple-darwin
+
   audit:
     name: cargo audit
     runs-on: macos-latest
@@ -61,7 +73,7 @@ jobs:
 
   publish-dry-run:
     name: publish dry-run
-    needs: [check, lint, test, audit]
+    needs: [check, lint, test, docs, audit]
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v6
