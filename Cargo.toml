@@ -10,8 +10,6 @@ keywords = ["macos", "core-animation", "quartz", "animation", "objc2"]
 categories = ["os::macos-apis", "gui"]
 exclude = ["examples/screenshots/*", "tools/*"]
 
-[workspace]
-
 [dependencies]
 duration-ext = { version = "1.0" }
 
