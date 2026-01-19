@@ -2,6 +2,7 @@
 
 use crate::animation_builder::{CABasicAnimationBuilder, KeyPath};
 use crate::color::Color;
+use crate::path_builder::CGPathBuilder;
 use objc2::rc::Retained;
 use objc2_core_foundation::{CFRetained, CGFloat, CGPoint, CGRect, CGSize};
 use objc2_core_graphics::{CGColor, CGPath};
@@ -413,6 +414,54 @@ impl CAShapeLayerBuilder {
     /// precedence and `scale`/`rotation`/`translate` are ignored.
     pub fn translate(mut self, dx: f64, dy: f64) -> Self {
         self.translation = Some((dx, dy));
+        self
+    }
+
+    /// Draws a custom path using the [`CGPathBuilder`].
+    ///
+    /// The path is configured using a closure that receives a
+    /// [`CGPathBuilder`] and returns the configured builder.
+    /// Also sets the layer's bounds to match the path's bounding box.
+    ///
+    /// # Arguments
+    ///
+    /// * `configure` - A closure that configures the path builder
+    ///
+    /// # Examples
+    ///
+    /// ```ignore
+    /// // Draw a custom gear shape
+    /// CAShapeLayerBuilder::new()
+    ///     .draw_path(|p| {
+    ///         p.move_to(100.0, 50.0)
+    ///             .arc(50.0, 50.0, 50.0, 0.0, PI * 2.0, false)
+    ///             .close()
+    ///     })
+    ///     .fill_color(Color::RED)
+    ///     .build();
+    ///
+    /// // Draw a triangle
+    /// CAShapeLayerBuilder::new()
+    ///     .draw_path(|p| {
+    ///         p.move_to(50.0, 0.0)
+    ///             .line_to(100.0, 100.0)
+    ///             .line_to(0.0, 100.0)
+    ///             .close()
+    ///     })
+    ///     .fill_color(Color::BLUE)
+    ///     .stroke_color(Color::WHITE)
+    ///     .build();
+    /// ```
+    pub fn draw_path<F>(mut self, configure: F) -> Self
+    where
+        F: FnOnce(CGPathBuilder) -> CGPathBuilder,
+    {
+        let builder = CGPathBuilder::new();
+        let configured = configure(builder);
+        let bounds = configured.bounding_box();
+        let path = configured.build();
+        self.path = Some(path.into());
+        self.bounds = Some(bounds);
         self
     }
 
