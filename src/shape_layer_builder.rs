@@ -101,7 +101,7 @@ impl CAShapeLayerBuilder {
 
     /// Sets the path to render.
     pub fn path(mut self, path: CFRetained<CGPath>) -> Self {
-        self.path = Some(path);
+        self.path = Some(path.into());
         self
     }
 
@@ -213,7 +213,14 @@ impl CAShapeLayerBuilder {
     }
 
     /// Sets the stroke line width.
+    #[deprecated(since = "0.3.1", note = "Use `stroke_width()` instead")]
     pub fn line_width(mut self, width: CGFloat) -> Self {
+        self.line_width = Some(width);
+        self
+    }
+
+    /// Sets the stroke line width.
+    pub fn stroke_width(mut self, width: f64) -> Self {
         self.line_width = Some(width);
         self
     }
@@ -239,6 +246,21 @@ impl CAShapeLayerBuilder {
     // ========================================================================
     // Shadow properties
     // ========================================================================
+
+    /// Sets a shadow, with radius, offset and color in one shot
+    pub fn shadow(
+        mut self,
+        radius: f64,
+        offset: impl Into<CGPoint>,
+        color: impl Into<CFRetained<CGColor>>,
+    ) -> Self {
+        let offset = offset.into();
+
+        self.shadow_radius = Some(radius);
+        self.shadow_offset = Some((offset.x, offset.y));
+        self.shadow_color = Some(color.into());
+        self
+    }
 
     /// Sets the shadow color.
     ///
