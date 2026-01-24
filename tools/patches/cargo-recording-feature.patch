@@ -1,17 +1,16 @@
 diff --git a/Cargo.toml b/Cargo.toml
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -10,6 +10,13 @@ keywords = ["macos", "core-animation", "quartz", "animation", "objc2"]
- categories = ["os::macos-apis", "gui"]
- exclude = ["examples/screenshots/*", "tools/*"]
-
+@@ -13,6 +13,12 @@ exclude = ["examples/screenshots/*", "tools/*"]
+ # We include_str! all examples as doctests, so we don't need to test them twice.
+ autoexamples = false
+ 
 +[features]
-+default = ["record"]
 +record = []
 +
 +[dev-dependencies]
 +t-rec = { git = "https://github.com/sassman/t-rec-rs", branch = "feat/crossterm-input-interception", features = ["lib"], default-features = false }
 +
- # We include_str! all examples as doctests, so we don't need to test them twice.
- autoexamples = false
-
+ [package.metadata.docs.rs]
+ default-target = "aarch64-apple-darwin"
+ targets = [

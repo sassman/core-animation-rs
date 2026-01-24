@@ -62,6 +62,18 @@ cargo run --example emitter
 
 ---
 
+### `glxgears`
+
+Classic glxgears rendered with Core Animation. Demonstrates `CGPathBuilder` for constructing complex gear tooth geometry with arcs and lines.
+
+[![glxgears](screenshots/glxgears.gif)](screenshots/glxgears.mp4)
+
+```bash
+cargo run --example glxgears
+```
+
+---
+
 ### `loading_spinner`
 
 Loading spinner with smooth rotating indicator using linear easing. Demonstrates `TransformRotation` animation with `Easing::Linear` for constant rotational speed.

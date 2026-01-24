@@ -80,5 +80,45 @@ objc2-app-kit = { version = "0.3.2", features = [
 ] }
 
 [[example]]
+name = "basic_layers"
+path = "examples/basic_layers.rs"
+
+[[example]]
+name = "breathing_circle"
+path = "examples/breathing_circle.rs"
+
+[[example]]
+name = "emitter"
+path = "examples/emitter.rs"
+
+[[example]]
 name = "glxgears"
 path = "examples/glxgears.rs"
+
+[[example]]
+name = "loading_spinner"
+path = "examples/loading_spinner.rs"
+
+[[example]]
+name = "neon_glow"
+path = "examples/neon_glow.rs"
+
+[[example]]
+name = "particle_images"
+path = "examples/particle_images.rs"
+
+[[example]]
+name = "point_burst"
+path = "examples/point_burst.rs"
+
+[[example]]
+name = "ripple_rings"
+path = "examples/ripple_rings.rs"
+
+[[example]]
+name = "staggered_dots"
+path = "examples/staggered_dots.rs"
+
+[[example]]
+name = "window_builder"
+path = "examples/window_builder.rs"
