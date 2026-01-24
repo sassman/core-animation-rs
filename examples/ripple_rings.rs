@@ -139,7 +139,7 @@ fn main() {
             .path(ring_path)
             .fill_color(Color::TRANSPARENT) // No fill - just stroke
             .stroke_color(ring_color)
-            .line_width(base_line_width)
+            .stroke_width(base_line_width)
             .bounds(CGRect::new(
                 CGPoint::ZERO,
                 CGSize::new(initial_ring_size, initial_ring_size),

@@ -18,14 +18,18 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CRATE_DIR="$(dirname "$SCRIPT_DIR")"
-PATCH_FILE="$SCRIPT_DIR/patches/recording-feature.patch"
+CARGO_PATCH="$SCRIPT_DIR/patches/cargo-recording-feature.patch"
+EXAMPLES_PATCH="$SCRIPT_DIR/patches/examples-recording-feature.patch"
 
 cd "$CRATE_DIR"
 
-# Ensure patch file exists
-if [ ! -f "$PATCH_FILE" ]; then
-    echo "Error: Recording patch not found at $PATCH_FILE"
-    echo "This patch is required to add recording support to examples."
+# Ensure patch files exist
+if [ ! -f "$CARGO_PATCH" ]; then
+    echo "Error: Cargo patch not found at $CARGO_PATCH"
+    exit 1
+fi
+if [ ! -f "$EXAMPLES_PATCH" ]; then
+    echo "Error: Examples patch not found at $EXAMPLES_PATCH"
     exit 1
 fi
 
@@ -44,14 +48,16 @@ trap cleanup EXIT
 echo "Generating example recordings for core-animation..."
 echo ""
 
-# Apply the recording patch
-echo "Applying recording patch..."
-git apply "$PATCH_FILE"
-echo "Patch applied successfully."
+# Apply the recording patches
+echo "Applying Cargo.toml patch..."
+git apply "$CARGO_PATCH"
+echo "Applying examples patch..."
+git apply "$EXAMPLES_PATCH"
+echo "Patches applied successfully."
 echo ""
 
 # List of examples (hardcoded since they don't have the feature gate in clean state)
-EXAMPLES="basic_layers breathing_circle emitter loading_spinner neon_glow particle_images point_burst ripple_rings staggered_dots window_builder"
+EXAMPLES="basic_layers breathing_circle emitter glxgears loading_spinner neon_glow particle_images point_burst ripple_rings staggered_dots window_builder"
 
 echo "Examples to record:"
 for example in $EXAMPLES; do

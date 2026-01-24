@@ -121,6 +121,7 @@ mod duration_ext;
 mod layer_builder;
 mod layer_ext;
 pub mod particles;
+mod path_builder;
 mod shape_layer_builder;
 mod text_layer_builder;
 pub mod window;
@@ -133,6 +134,7 @@ pub use objc2_quartz_core::{CALayer, CAShapeLayer, CATextLayer, CATransform3D};
 
 // Re-export our builders
 pub use layer_builder::CALayerBuilder;
+pub use path_builder::CGPathBuilder;
 pub use shape_layer_builder::CAShapeLayerBuilder;
 pub use text_layer_builder::{CATextLayerBuilder, TextAlign, Truncation};
 
@@ -165,6 +167,7 @@ pub mod prelude {
         CAEmitterCellBuilder, CAEmitterLayerBuilder, EmitterMode, EmitterShape, ParticleImage,
         PointBurstBuilder, RenderMode,
     };
+    pub use crate::path_builder::CGPathBuilder;
     pub use crate::shape_layer_builder::CAShapeLayerBuilder;
     pub use crate::text_layer_builder::{CATextLayerBuilder, TextAlign, Truncation};
     pub use crate::window::{Screen, Window, WindowBuilder, WindowLevel, WindowStyle};

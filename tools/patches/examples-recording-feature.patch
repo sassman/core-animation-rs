@@ -1,0 +1,451 @@
+diff --git a/examples/basic_layers.rs b/examples/basic_layers.rs
+--- a/examples/basic_layers.rs
++++ b/examples/basic_layers.rs
+@@ -9,6 +9,10 @@
+ #[cfg(target_os = "macos")]
+ use core_animation::prelude::*;
+
++#[cfg(target_os = "macos")]
++#[path = "common/mod.rs"]
++mod common;
++
+ #[cfg(target_os = "macos")]
+ fn main() {
+     println!("Basic Layers - Animated Shapes\n");
+@@ -90,6 +94,14 @@ fn main() {
+
+     println!("Pulsing shapes for 5 seconds...\n");
+
++    #[cfg(feature = "record")]
++    common::show_with_recording(
++        &window,
++        "examples/screenshots/basic_layers",
++        5.seconds(),
++    );
++
++    #[cfg(not(feature = "record"))]
+     window.show_for(5.seconds());
+
+     println!("Done!");
+diff --git a/examples/breathing_circle.rs b/examples/breathing_circle.rs
+--- a/examples/breathing_circle.rs
++++ b/examples/breathing_circle.rs
+@@ -10,6 +10,10 @@
+ #[cfg(target_os = "macos")]
+ use core_animation::prelude::*;
+
++#[cfg(target_os = "macos")]
++#[path = "common/mod.rs"]
++mod common;
++
+ #[cfg(target_os = "macos")]
+ fn main() {
+     println!("Breathing Circle - Soft Pulsing Orb\n");
+@@ -117,6 +121,14 @@ fn main() {
+     println!("Watch the breathing orb for 10 seconds...");
+     println!("Notice how opacity peaks when the circle is smallest.\n");
+
++    #[cfg(feature = "record")]
++    common::show_with_recording(
++        &window,
++        "examples/screenshots/breathing_circle",
++        10.seconds(),
++    );
++
++    #[cfg(not(feature = "record"))]
+     window.show_for(10.seconds());
+
+     println!("Done!");
+diff --git a/examples/common/mod.rs b/examples/common/mod.rs
+new file mode 100644
+--- /dev/null
++++ b/examples/common/mod.rs
+@@ -0,0 +1,10 @@
++//! Common utilities for examples.
++//!
++//! This module provides helper functions used across multiple examples,
++//! including the recording functionality.
++
++#[cfg(feature = "record")]
++mod recording;
++
++#[cfg(feature = "record")]
++pub use recording::show_with_recording;
+diff --git a/examples/common/recording.rs b/examples/common/recording.rs
+new file mode 100644
+--- /dev/null
++++ b/examples/common/recording.rs
+@@ -0,0 +1,112 @@
++//! Recording helper for examples.
++//!
++//! This module provides a clean API for recording window animations to GIF and MP4.
++
++use core_animation::Window;
++use std::path::Path;
++use std::time::Duration;
++use t_rec::HeadlessRecorder;
++
++/// Show the window and record the animation to GIF and MP4 files.
++///
++/// This is useful for generating demo recordings for examples automatically.
++/// The output files are saved with the appropriate extensions (`.gif` and `.mp4`).
++///
++/// Uses sensible defaults for demo recordings:
++/// - 15 FPS
++/// - No decoration (clean output)
++/// - Ventura wallpaper with 60px padding
++///
++/// # Arguments
++///
++/// * `window` - The window to record.
++/// * `base_path` - The base path for output files (without extension).
++///   For example, `"screenshots/my_example"` will create:
++///   - `screenshots/my_example.gif`
++///   - `screenshots/my_example.mp4`
++/// * `duration` - How long to record the animation.
++///
++/// # Example
++///
++/// ```ignore
++/// use core_animation::prelude::*;
++/// mod common;
++///
++/// common::show_with_recording(
++///     &window,
++///     "crates/core-animation/examples/screenshots/my_example",
++///     5.seconds(),
++/// );
++/// ```
++pub fn show_with_recording(window: &Window, base_path: impl AsRef<Path>, duration: Duration) {
++    let base_path = base_path.as_ref();
++
++    // Create parent directories if needed
++    if let Some(parent) = base_path.parent() {
++        if let Err(e) = std::fs::create_dir_all(parent) {
++            eprintln!("Failed to create directory: {}", e);
++            // Fall back to just showing the window
++            window.show_for(duration);
++            return;
++        }
++    }
++
++    // Show window and pump event loop to ensure visibility
++    window.show();
++    for _ in 0..30 {
++        window.run_loop_tick();
++    }
++
++    // Create recorder with defaults for demo recordings
++    let recorder_result = HeadlessRecorder::builder()
++        .window_id(window.window_id())
++        .with_defaults_for_demo()
++        .output_both(base_path)
++        .build();
++
++    let mut recorder = match recorder_result {
++        Ok(r) => r,
++        Err(e) => {
++            eprintln!("Failed to create recorder: {}", e);
++            eprintln!("Recording requires ImageMagick and ffmpeg to be installed.");
++            // Fall back to just showing the window
++            let start = std::time::Instant::now();
++            while start.elapsed() < duration {
++                window.run_loop_tick();
++            }
++            return;
++        }
++    };
++
++    // Start recording
++    if let Err(e) = recorder.start() {
++        eprintln!("Failed to start recording: {}", e);
++        let start = std::time::Instant::now();
++        while start.elapsed() < duration {
++            window.run_loop_tick();
++        }
++        return;
++    }
++
++    // Run the animation for the specified duration
++    let start = std::time::Instant::now();
++    while start.elapsed() < duration {
++        window.run_loop_tick();
++    }
++
++    // Stop and generate outputs
++    match recorder.stop_and_generate() {
++        Ok(output) => {
++            println!("Recording complete! Frames: {}", output.frame_count);
++            if let Some(ref gif_path) = output.gif_path {
++                println!("  GIF: {}", gif_path.display());
++            }
++            if let Some(ref mp4_path) = output.mp4_path {
++                println!("  MP4: {}", mp4_path.display());
++            }
++        }
++        Err(e) => {
++            eprintln!("Failed to generate recording: {}", e);
++        }
++    }
++}
+diff --git a/examples/emitter.rs b/examples/emitter.rs
+--- a/examples/emitter.rs
++++ b/examples/emitter.rs
+@@ -41,6 +41,10 @@ use std::f64::consts::PI;
+ #[cfg(target_os = "macos")]
+ use core_animation::prelude::*;
+
++#[cfg(target_os = "macos")]
++#[path = "common/mod.rs"]
++mod common;
++
+ #[cfg(target_os = "macos")]
+ fn main() {
+     println!("Particle Emitter Example\n");
+@@ -77,6 +81,14 @@ fn main() {
+     println!("  - lifetime: 10 seconds");
+     println!("  - At steady state: ~1000 particles on screen\n");
+
++    #[cfg(feature = "record")]
++    common::show_with_recording(
++        &window,
++        "examples/screenshots/emitter",
++        15.seconds(),
++    );
++
++    #[cfg(not(feature = "record"))]
+     window.show_for(15.seconds());
+
+     println!("Done!");
+diff --git a/examples/glxgears.rs b/examples/glxgears.rs
+--- a/examples/glxgears.rs
++++ b/examples/glxgears.rs
+@@ -8,6 +8,10 @@ use core_animation::prelude::*;
+ #[cfg(target_os = "macos")]
+ use std::f64::consts::PI;
+
++#[cfg(target_os = "macos")]
++#[path = "common/mod.rs"]
++mod common;
++
+ #[cfg(target_os = "macos")]
+ /// Draws a gear shape into the path builder.
+ fn draw_gear(
+@@ -171,6 +175,14 @@ fn main() {
+     println!("glxgears - Core Animation Edition");
+     println!("Press Cmd+Q or close window to exit");
+
++    #[cfg(feature = "record")]
++    common::show_with_recording(
++        &window,
++        "examples/screenshots/glxgears",
++        10.seconds(),
++    );
++
++    #[cfg(not(feature = "record"))]
+     window.show_for(15.seconds());
+ }
+
+diff --git a/examples/loading_spinner.rs b/examples/loading_spinner.rs
+--- a/examples/loading_spinner.rs
++++ b/examples/loading_spinner.rs
+@@ -12,6 +12,10 @@ use core_animation::prelude::*;
+ #[cfg(target_os = "macos")]
+ use std::f64::consts::PI;
+
++#[cfg(target_os = "macos")]
++#[path = "common/mod.rs"]
++mod common;
++
+ #[cfg(target_os = "macos")]
+ fn main() {
+     println!("Loading Spinner - Smooth Rotation\n");
+@@ -199,6 +203,14 @@ fn main() {
+     println!("Watch the loading spinner for 10 seconds...");
+     println!("Notice the constant speed from Easing::Linear.\n");
+
++    #[cfg(feature = "record")]
++    common::show_with_recording(
++        &window,
++        "examples/screenshots/loading_spinner",
++        10.seconds(),
++    );
++
++    #[cfg(not(feature = "record"))]
+     window.show_for(10.seconds());
+
+     println!("Done!");
+diff --git a/examples/neon_glow.rs b/examples/neon_glow.rs
+--- a/examples/neon_glow.rs
++++ b/examples/neon_glow.rs
+@@ -10,6 +10,10 @@
+ #[cfg(target_os = "macos")]
+ use core_animation::prelude::*;
+
++#[cfg(target_os = "macos")]
++#[path = "common/mod.rs"]
++mod common;
++
+ #[cfg(target_os = "macos")]
+ fn main() {
+     println!("Neon Glow - Retro Neon Sign Effect\n");
+@@ -170,6 +174,14 @@ fn main() {
+     println!("Watch the neon glow effect for 10 seconds...");
+     println!("Notice the pulsing shadow radius creating the glow.\n");
+
++    #[cfg(feature = "record")]
++    common::show_with_recording(
++        &window,
++        "examples/screenshots/neon_glow",
++        10.seconds(),
++    );
++
++    #[cfg(not(feature = "record"))]
+     window.show_for(10.seconds());
+
+     println!("Done!");
+diff --git a/examples/particle_images.rs b/examples/particle_images.rs
+--- a/examples/particle_images.rs
++++ b/examples/particle_images.rs
+@@ -11,6 +11,10 @@ use std::f64::consts::PI;
+ #[cfg(target_os = "macos")]
+ use core_animation::prelude::*;
+
++#[cfg(target_os = "macos")]
++#[path = "common/mod.rs"]
++mod common;
++
+ #[cfg(target_os = "macos")]
+ fn main() {
+     println!("Particle Images Showcase\n");
+@@ -129,6 +133,14 @@ fn main() {
+     }
+     println!();
+
++    #[cfg(feature = "record")]
++    common::show_with_recording(
++        &window,
++        "examples/screenshots/particle_images",
++        15.seconds(),
++    );
++
++    #[cfg(not(feature = "record"))]
+     window.show_for(15.seconds());
+
+     println!("Done!");
+diff --git a/examples/point_burst.rs b/examples/point_burst.rs
+--- a/examples/point_burst.rs
++++ b/examples/point_burst.rs
+@@ -8,6 +8,10 @@
+ #[cfg(target_os = "macos")]
+ use core_animation::prelude::*;
+
++#[cfg(target_os = "macos")]
++#[path = "common/mod.rs"]
++mod common;
++
+ #[cfg(target_os = "macos")]
+ fn main() {
+     println!("PointBurstBuilder Example\n");
+@@ -70,6 +74,14 @@ fn main() {
+     println!("PointBurstBuilder simplifies the common pattern of");
+     println!("particles exploding outward from a single point.\n");
+
++    #[cfg(feature = "record")]
++    common::show_with_recording(
++        &window,
++        "examples/screenshots/point_burst",
++        12.seconds(),
++    );
++
++    #[cfg(not(feature = "record"))]
+     window.show_for(12.seconds());
+
+     println!("Done!");
+diff --git a/examples/ripple_rings.rs b/examples/ripple_rings.rs
+--- a/examples/ripple_rings.rs
++++ b/examples/ripple_rings.rs
+@@ -18,6 +18,10 @@
+ #[cfg(target_os = "macos")]
+ use core_animation::prelude::*;
+
++#[cfg(target_os = "macos")]
++#[path = "common/mod.rs"]
++mod common;
++
+ #[cfg(target_os = "macos")]
+ fn main() {
+     println!("Ripple Rings - Water Ripple Effect\n");
+@@ -189,6 +193,14 @@ fn main() {
+     println!("  - Staggered phase creates continuous emanation");
+     println!("  - Easing::Out gives realistic ripple physics\n");
+
++    #[cfg(feature = "record")]
++    common::show_with_recording(
++        &window,
++        "examples/screenshots/ripple_rings",
++        15.seconds(),
++    );
++
++    #[cfg(not(feature = "record"))]
+     window.show_for(15.seconds());
+
+     println!("Done!");
+diff --git a/examples/staggered_dots.rs b/examples/staggered_dots.rs
+--- a/examples/staggered_dots.rs
++++ b/examples/staggered_dots.rs
+@@ -10,6 +10,10 @@
+ #[cfg(target_os = "macos")]
+ use core_animation::prelude::*;
+
++#[cfg(target_os = "macos")]
++#[path = "common/mod.rs"]
++mod common;
++
+ #[cfg(target_os = "macos")]
+ fn main() {
+     println!("Staggered Dots - Loading Indicator\n");
+@@ -141,6 +145,14 @@ fn main() {
+     println!("Watch the staggered dots for 10 seconds...");
+     println!("Notice how phase_offset creates the wave effect.\n");
+
++    #[cfg(feature = "record")]
++    common::show_with_recording(
++        &window,
++        "examples/screenshots/staggered_dots",
++        10.seconds(),
++    );
++
++    #[cfg(not(feature = "record"))]
+     window.show_for(10.seconds());
+
+     println!("Done!");
+diff --git a/examples/window_builder.rs b/examples/window_builder.rs
+--- a/examples/window_builder.rs
++++ b/examples/window_builder.rs
+@@ -9,6 +9,10 @@
+ #[cfg(target_os = "macos")]
+ use core_animation::prelude::*;
+
++#[cfg(target_os = "macos")]
++#[path = "common/mod.rs"]
++mod common;
++
+ #[cfg(target_os = "macos")]
+ fn main() {
+     println!("WindowBuilder Example - Fluent API\n");
+@@ -52,6 +56,14 @@ fn main() {
+     println!("Window size: {:?}", window.size());
+     println!("Showing pulsing circle for 10 seconds...\n");
+
++    #[cfg(feature = "record")]
++    common::show_with_recording(
++        &window,
++        "examples/screenshots/window_builder",
++        10.seconds(),
++    );
++
++    #[cfg(not(feature = "record"))]
+     window.show_for(10.seconds());
+
+     println!("Done!");

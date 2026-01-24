@@ -1,0 +1,16 @@
+diff --git a/Cargo.toml b/Cargo.toml
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -13,6 +13,12 @@ exclude = ["examples/screenshots/*", "tools/*"]
+ # We include_str! all examples as doctests, so we don't need to test them twice.
+ autoexamples = false
+ 
++[features]
++record = []
++
++[dev-dependencies]
++t-rec = { git = "https://github.com/sassman/t-rec-rs", branch = "feat/crossterm-input-interception", features = ["lib"], default-features = false }
++
+ [package.metadata.docs.rs]
+ default-target = "aarch64-apple-darwin"
+ targets = [
