@@ -421,15 +421,7 @@ impl CGPathBuilder {
     ///     .curve_to(25.0, -50.0, 75.0, -50.0, 100.0, 0.0)  // S-curve
     /// ```
     #[must_use]
-    pub fn curve_to(
-        self,
-        cp1_x: f64,
-        cp1_y: f64,
-        cp2_x: f64,
-        cp2_y: f64,
-        x: f64,
-        y: f64,
-    ) -> Self {
+    pub fn curve_to(self, cp1_x: f64, cp1_y: f64, cp2_x: f64, cp2_y: f64, x: f64, y: f64) -> Self {
         unsafe {
             CGMutablePath::add_curve_to_point(
                 Some(&self.path),
@@ -592,12 +584,7 @@ impl CGPathBuilder {
     #[must_use]
     pub fn circle(self, center_x: f64, center_y: f64, diameter: f64) -> Self {
         let radius = diameter / 2.0;
-        self.ellipse(
-            center_x - radius,
-            center_y - radius,
-            diameter,
-            diameter,
-        )
+        self.ellipse(center_x - radius, center_y - radius, diameter, diameter)
     }
 
     // ========================================================================
@@ -653,10 +640,7 @@ impl CGPathBuilder {
             return self;
         }
 
-        let cg_points: Vec<CGPoint> = points
-            .iter()
-            .map(|(x, y)| CGPoint::new(*x, *y))
-            .collect();
+        let cg_points: Vec<CGPoint> = points.iter().map(|(x, y)| CGPoint::new(*x, *y)).collect();
 
         unsafe {
             CGMutablePath::add_lines(
@@ -762,9 +746,7 @@ mod tests {
 
     #[test]
     fn test_rect() {
-        let path = CGPathBuilder::new()
-            .rect(10.0, 20.0, 100.0, 50.0)
-            .build();
+        let path = CGPathBuilder::new().rect(10.0, 20.0, 100.0, 50.0).build();
 
         let bounds = CGPath::bounding_box(Some(&path));
         assert!((bounds.origin.x - 10.0).abs() < 0.001);

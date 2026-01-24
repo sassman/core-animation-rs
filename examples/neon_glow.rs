@@ -51,7 +51,7 @@ fn main() {
         .path(neon_path.clone())
         .fill_color(Color::TRANSPARENT)
         .stroke_color(neon_pink)
-        .line_width(6.0)
+        .stroke_width(6.0)
         .bounds(CGRect::new(
             CGPoint::ZERO,
             CGSize::new(rect_width, rect_height),
@@ -85,7 +85,7 @@ fn main() {
         .path(neon_path.clone())
         .fill_color(Color::TRANSPARENT)
         .stroke_color(neon_cyan)
-        .line_width(6.0)
+        .stroke_width(6.0)
         .bounds(CGRect::new(
             CGPoint::ZERO,
             CGSize::new(rect_width, rect_height),

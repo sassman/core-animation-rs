@@ -52,6 +52,7 @@ fn draw_gear(
 }
 
 #[cfg(target_os = "macos")]
+#[allow(clippy::too_many_arguments)]
 /// Creates a gear layer with rotation animation.
 fn gear(
     inner: f64,

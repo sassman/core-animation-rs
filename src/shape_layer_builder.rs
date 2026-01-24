@@ -102,7 +102,7 @@ impl CAShapeLayerBuilder {
 
     /// Sets the path to render.
     pub fn path(mut self, path: CFRetained<CGPath>) -> Self {
-        self.path = Some(path.into());
+        self.path = Some(path);
         self
     }
 
@@ -460,7 +460,7 @@ impl CAShapeLayerBuilder {
         let configured = configure(builder);
         let bounds = configured.bounding_box();
         let path = configured.build();
-        self.path = Some(path.into());
+        self.path = Some(path);
         self.bounds = Some(bounds);
         self
     }

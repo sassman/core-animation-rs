@@ -85,7 +85,7 @@ fn main() {
         .path(glow_path)
         .fill_color(Color::TRANSPARENT)
         .stroke_color(orb_color.with_alpha(0.3))
-        .line_width(3.0)
+        .stroke_width(3.0)
         .bounds(CGRect::new(
             CGPoint::ZERO,
             CGSize::new(glow_size, glow_size),
